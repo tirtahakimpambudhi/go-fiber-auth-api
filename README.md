@@ -239,6 +239,7 @@ npm run build # with redocly
 # Database commands
 make db_up      # Run migrations up
 make db_down    # Run migrations down
+make db_version # Run migrations version to show version migration
 ```
 
 ## 🌐 Deployment
