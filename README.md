@@ -239,7 +239,6 @@ npm run build # with redocly
 # Database commands
 make db_up      # Run migrations up
 make db_down    # Run migrations down
-make db_reset   # Reset database
 ```
 
 ## 🌐 Deployment
@@ -261,7 +260,7 @@ This service is configured for deployment on Railway. GitHub Actions workflow is
 
 ## 📜 License
 
-This project is licensed under the APACHE License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the APACHE License - see the [LICENSE](LICENSE.md) file for details.
 
 ## 🤝 Support
 
