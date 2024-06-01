@@ -46,6 +46,9 @@ jobs:
 
   build:
     name: "Lint, Test , Scan and Migrate DB"
+    defaults:
+      run:
+        working-directory: ./
     runs-on: ubuntu-22.04
     needs:
       - setup
