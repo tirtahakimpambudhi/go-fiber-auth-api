@@ -46,9 +46,6 @@ jobs:
 
   build:
     name: "Lint, Test , Scan and Migrate DB"
-    defaults:
-      run:
-        working-directory: ./
     runs-on: ubuntu-22.04
     needs:
       - setup
@@ -59,8 +56,11 @@ jobs:
       - name: Setup Go environment
         uses: actions/setup-go@v5.2.0
 
+      - name: Install OSV Scanner
+        run: go install github.com/google/osv-scanner/cmd/osv-scanner@v1
+
       - name: Scan Dependencies
-        run: go install github.com/google/osv-scanner/cmd/osv-scanner@v1 && make pkg_scan
+        run: make pkg_scan
 
       - name: Build API Docs
         run: |
