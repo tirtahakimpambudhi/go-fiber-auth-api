@@ -8,7 +8,6 @@ resource/ssl/
 .scannerwork/
 artifact/
 script/
-package-lock.json
 sonar-project.properties
 docker-compose.yml
 db/postgresql
