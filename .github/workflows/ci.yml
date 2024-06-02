@@ -61,7 +61,8 @@ jobs:
 
       - name: Install OSV Scanner
         run: go install github.com/google/osv-scanner/cmd/osv-scanner@v1
-
+      - name: DEBUG LS REMOVE IF AFTER NOT DEBUG
+        run: ls -a
       - name: Scan Dependencies
         run: make pkg_scan
 
