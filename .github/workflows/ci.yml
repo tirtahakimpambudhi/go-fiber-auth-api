@@ -15,9 +15,8 @@ jobs:
     name: "Setup Environment Variable , Postgresql And Redis For CI"
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-        name: "Checkout Repository"
-
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
     services:
       postgres:
         image: postgres
@@ -53,6 +52,9 @@ jobs:
     needs:
       - setup
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
       - name: Setup Node.js environment
         uses: actions/setup-node@v4.1.0
 
@@ -88,6 +90,9 @@ jobs:
     needs:
       - build
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -176,6 +181,9 @@ jobs:
     needs:
       - smoke_test
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
