@@ -63,8 +63,7 @@ jobs:
 
       - name: Install OSV Scanner
         run: go install github.com/google/osv-scanner/cmd/osv-scanner@v1
-      - name: DEBUG LS REMOVE IF AFTER NOT DEBUG
-        run: ls -a
+
       - name: Scan Dependencies
         run: make pkg_scan
 
@@ -73,10 +72,7 @@ jobs:
           npm ci && npm run build
 
       - name: Running Lint GO
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.56.0
-          args: --config .golangci.yaml
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.58.2 && make lint
 
       - name: Running Unit Test Go
         run: go mod download && make tests
@@ -176,7 +172,7 @@ jobs:
           envVar: '[{ "key": "baseUrl", "value": "${{secrets.BASE_URL}}" },{"key":"secretTestClient","value":"${{secrets.SECRET_TEST_CLIENT}}"},{"key":"randomKSUID","value":"${{secrets.RANDOM_KSUID}}"}]'
 
   release:
-    name: "Smoke Test and Push to Registry"
+    name: "Push to Registry"
     runs-on: ubuntu-22.04
     needs:
       - smoke_test
