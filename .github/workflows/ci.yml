@@ -60,6 +60,8 @@ jobs:
 
       - name: Setup Go environment
         uses: actions/setup-go@v5.2.0
+        with:
+          go-version: "1.22.7"
 
       - name: Install OSV Scanner
         run: go install github.com/google/osv-scanner/cmd/osv-scanner@v1
@@ -71,8 +73,11 @@ jobs:
         run: |
           npm ci && npm run build
 
-      - name: Running Lint GO
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.58.2 && make lint
+      - name: Running Lint Go
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.56.0
+          args: --config .golangci.yaml
 
       - name: Running Unit Test Go
         run: go mod download && make tests
