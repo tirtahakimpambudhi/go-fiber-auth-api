@@ -6,7 +6,7 @@ client/
 resource/logs/
 resource/ssl/
 .scannerwork/
-artifact/**/*.out
+artifact
 script/
 sonar-project.properties
 docker-compose.yml
