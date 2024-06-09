@@ -14,7 +14,7 @@ lint:
 	@golangci-lint run ./...
 
 tests:
-	@go test ./... -coverprofile=artifact/coverage/coverage.out
+	@go test ./... -coverprofile=./coverage.out
 
 pkg_scan:
 	@osv-scanner --lockfile package-lock.json
