@@ -80,7 +80,7 @@ jobs:
           args: --config .golangci.yaml
 
       - name: Running Unit Test Go
-        run: go mod download && make tests
+        run: go mod download && make tests_nocov
 
       - name: Migrate Database
         run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.0 && make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
