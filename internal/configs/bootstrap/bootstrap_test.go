@@ -26,11 +26,11 @@ func SetupContainer(t *testing.T) []func(ctx context.Context) error {
 	}
 	ctx := context.Background()
 
-	// Redis setup
+	// Redis setup with custom port 6969
 	redisReq := testcontainers.ContainerRequest{
-		Image:       "redis:latest",
-		WaitingFor:  wait.ForLog("Ready to accept connections"),
-		NetworkMode: "host",
+		Image:        "redis:latest",
+		ExposedPorts: []string{"6969:6379"},
+		WaitingFor:   wait.ForLog("Ready to accept connections"),
 	}
 	redisC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: redisReq,
@@ -39,21 +39,16 @@ func SetupContainer(t *testing.T) []func(ctx context.Context) error {
 	require.NoError(t, err)
 	t.Log("Successfully Redis Setup")
 
-	// Get the Redis port and host
-	redisPort, err := redisC.MappedPort(ctx, "6379")
-	require.NoError(t, err)
-	t.Logf("Redis is running on port %s", redisPort.Port())
-
-	// Postgres setup
+	// Postgres setup with custom port 5440
 	postgresReq := testcontainers.ContainerRequest{
-		Image: "postgres:13-alpine",
+		Image:        "postgres:13-alpine",
+		ExposedPorts: []string{"5440:5432"},
 		Env: map[string]string{
 			"POSTGRES_DB":       "test",
 			"POSTGRES_USER":     "postgres",
 			"POSTGRES_PASSWORD": "postgres",
 		},
-		WaitingFor:  wait.ForLog("database system is ready to accept connections"),
-		NetworkMode: "host",
+		WaitingFor: wait.ForLog("database system is ready to accept connections"),
 	}
 	postgresC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: postgresReq,
@@ -63,18 +58,14 @@ func SetupContainer(t *testing.T) []func(ctx context.Context) error {
 	require.NoError(t, err)
 	t.Log("Successfully Postgres Setup")
 
-	// Get the PostgreSQL port and connection string
-	postgresPort, err := postgresC.MappedPort(ctx, "5432")
-	require.NoError(t, err)
-	t.Logf("Postgres is running on port %s", postgresPort.Port())
+	// Update environment variables to match new ports
+	os.Setenv("CACHE_DB_PORT", "6969")
+	os.Setenv("DB_PORT", "5440")
 
-	// Print the connection string for PostgreSQL
-	postgresHost, err := postgresC.Host(ctx)
-	require.NoError(t, err)
-	connectionString := fmt.Sprintf("postgres://postgres:postgres@%s:%s/test?sslmode=disable", postgresHost, postgresPort.Port())
-	t.Logf("Postgres connection string: %s", connectionString)
-
-	return []func(context.Context) error{redisC.Terminate, postgresC.Terminate}
+	return []func(ctx context.Context) error{
+		redisC.Terminate,
+		postgresC.Terminate,
+	}
 }
 
 func SetupCasbin(t *testing.T) {
@@ -154,7 +145,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -195,7 +186,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "postgres",
 			"DB_MAX_CON":  "100",
@@ -220,7 +211,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -248,7 +239,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "fakepassword",
 			"DB_MAX_CON":  "100",
@@ -304,7 +295,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "postgres",
 			"DB_MAX_CON":  "100",
@@ -329,7 +320,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -360,7 +351,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "postgres",
 			"DB_MAX_CON":  "100",
@@ -385,7 +376,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -438,7 +429,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -479,7 +470,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "postgres",
 			"DB_MAX_CON":  "100",
@@ -499,7 +490,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -540,7 +531,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgresql",
 			"DB_PASS":     "wrongpassword",
 			"DB_MAX_CON":  "100",
@@ -565,7 +556,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -606,7 +597,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "postgres",
 			"DB_MAX_CON":  "100",
@@ -628,7 +619,7 @@ func TestInitBootstrap(t *testing.T) {
 			// RedisConfig
 			"CACHE_DB_NAME":     "1",
 			"CACHE_DB_HOST":     "localhost",
-			"CACHE_DB_PORT":     "6379",
+			"CACHE_DB_PORT":     "6969",
 			"CACHE_DB_USER":     "default",
 			"CACHE_DB_PASS":     "fakepassword",
 			"CACHE_DB_MAX_CON":  "100",
@@ -669,7 +660,7 @@ func TestInitBootstrap(t *testing.T) {
 			"DB_PROTOCOL": "postgresql",
 			"DB_NAME":     "test",
 			"DB_HOST":     "localhost",
-			"DB_PORT":     "5432",
+			"DB_PORT":     "5440",
 			"DB_USER":     "postgres",
 			"DB_PASS":     "postgres",
 			"DB_MAX_CON":  "100",
