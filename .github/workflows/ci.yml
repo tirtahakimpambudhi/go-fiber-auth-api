@@ -11,46 +11,12 @@ on:
       - dev
 
 jobs:
-  setup:
-    name: "Setup Environment Variable , Postgresql And Redis For CI"
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-    services:
-      postgres:
-        image: postgres
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      redis:
-        image: redis
-        env:
-          REDIS_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        ports:
-          - 6739:6739
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
   build:
-    name: "Lint, Test , Scan and Migrate DB"
+    name: "Lint, Test and Scan Dependencies"
     defaults:
       run:
         shell: bash
     runs-on: ubuntu-22.04
-    needs:
-      - setup
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -82,14 +48,36 @@ jobs:
       - name: Running Unit Test Go
         run: go mod download && make tests_nocov
 
-      - name: Migrate Database
-        run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.0 && make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
-
   smoke_test:
     name: "Smoke Test Container Of Image before Push to Registry"
     runs-on: ubuntu-22.04
     needs:
       - build
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis
+        env:
+          REDIS_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - 6739:6739
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -105,6 +93,9 @@ jobs:
           docker buildx build -t ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
           --build-arg username=${{secrets.APP_USER}} \
           --build-arg unique_id=${{secrets.APP_ID}}
+
+      - name: Migrate Database
+        run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.0 && make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
 
       - name: Running Container
         run: |
