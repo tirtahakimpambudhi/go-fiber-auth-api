@@ -1,4 +1,4 @@
-.PHONY: env db_up db_down db_version lint tests pkg_scan build
+.PHONY: env db_up db_down db_version lint tests pkg_scan build tests_nocov
 
 DB_URL="postgresql://user:password@host:port/database?sslmode=disable"
 APP_NAME="main"
@@ -15,6 +15,11 @@ lint:
 
 tests:
 	@go test ./... -coverprofile=./coverage.out
+
+
+tests_nocov:
+	@go test ./... && rm -rf internal/configs/bootstrap/resource
+
 
 pkg_scan:
 	@osv-scanner --lockfile package-lock.json
