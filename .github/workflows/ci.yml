@@ -92,7 +92,7 @@ jobs:
         run: |
           docker buildx build -t ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
           --build-arg username=${{secrets.APP_USER}} \
-          --build-arg unique_id=${{secrets.APP_ID}}
+          --build-arg unique_id=${{secrets.APP_ID}} .
 
       - name: Migrate Database
         run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.0 && make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
