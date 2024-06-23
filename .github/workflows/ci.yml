@@ -94,8 +94,14 @@ jobs:
           --build-arg username=${{secrets.APP_USER}} \
           --build-arg unique_id=${{secrets.APP_ID}} .
 
+      - name: Install golang-migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate.linux-amd64 /usr/bin/
+          which migrate
+
       - name: Migrate Database
-        run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.0 && make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
+        run: make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
 
       - name: Running Container
         run: |
