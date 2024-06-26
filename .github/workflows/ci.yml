@@ -96,7 +96,7 @@ jobs:
 
       - name: Build Image
         run: |
-          docker buildx build -t ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
+          docker buildx build --load -t ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
           --build-arg username=${{secrets.APP_USER}} \
           --build-arg unique_id=${{secrets.APP_ID}} .
 
@@ -108,7 +108,8 @@ jobs:
 
       - name: Migrate Database
         run: make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
-
+      - name: Verify Image
+        run: docker images | grep ${{secrets.IMAGE_NAME}}
       - name: Running Container
         run: |
           docker run -d \
