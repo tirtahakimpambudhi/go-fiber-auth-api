@@ -171,7 +171,8 @@ jobs:
             -e CORS_ALLOW_ORIGINS=${{ secrets.CORS_ALLOW_ORIGINS }} \
             -e CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }} \
             ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}}
-
+      - name: Verify Container
+        run: docker container ls -a | grep ${{secrets.CONTAINER_NAME}} && curl ${{ secrets.BASE_URL }}
       - uses: matt-ball/newman-action@master
         with:
           collection: tests/end2end/auth_api_test.postman_collection.json
