@@ -108,8 +108,14 @@ jobs:
 
       - name: Migrate Database
         run: make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
-      - name: Verify Image
-        run: docker images | grep ${{secrets.IMAGE_NAME}}
+      - name: Verify Container
+        run: |
+          sleep 10  # Give the application time to start  
+          docker container ls -a | grep ${{secrets.CONTAINER_NAME}} && curl ${{ secrets.BASE_URL }}
+      - name: Check Container Logs
+        run: docker logs ${{ secrets.CONTAINER_NAME }}
+      - name: Check Container Network
+        run: docker inspect ${{ secrets.CONTAINER_NAME }} | grep -i ipaddress
       - name: Running Container
         run: |
           docker run -d \
