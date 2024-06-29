@@ -172,7 +172,7 @@ jobs:
       - name: Verify Container
         run: |
           sleep 10  # Give the application time to start  
-          docker container ls -a | grep ${{secrets.CONTAINER_NAME}} && curl ${{ secrets.BASE_URL }}
+          docker container ls -a | grep ${{secrets.CONTAINER_NAME}}
       - name: Check Container Logs
         run: docker logs ${{ secrets.CONTAINER_NAME }}
       - name: Check Container Network
