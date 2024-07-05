@@ -1,0 +1,1110 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RESTful API Auth",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Tirta Hakim Pambudhi",
+      "email": "tirtanewwhakim22@gmail.com",
+      "url": "https://github.com/tirtahakimpambudhi"
+    },
+    "license": {
+      "name": "APACHE 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "servers": [
+    {
+      "description": "Localhost Server",
+      "url": "http://localhost:{port}/api/{version}",
+      "variables": {
+        "port": {
+          "default": "80",
+          "enum": [
+            "80",
+            "3001",
+            "5400"
+          ]
+        },
+        "version": {
+          "default": "v1",
+          "enum": [
+            "v1"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Public Server",
+      "url": "http://{sub-domain}.{top-domain}:{port}/api/{version}",
+      "variables": {
+        "sub-domain": {
+          "default": "authserver",
+          "enum": [
+            "authserver"
+          ]
+        },
+        "top-domain": {
+          "default": "com",
+          "enum": [
+            "com",
+            "id",
+            "xyz",
+            "dev"
+          ]
+        },
+        "port": {
+          "default": "80",
+          "enum": [
+            "80",
+            "443"
+          ]
+        },
+        "version": {
+          "default": "v1",
+          "enum": [
+            "v1"
+          ]
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "the tags 'Users' used for grouping the path related users"
+    },
+    {
+      "name": "auth",
+      "description": "the tags 'Auth' used for grouping the path related Authentication"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Get all users in the store",
+        "tags": [
+          "users"
+        ],
+        "operationId": "indexUsers",
+        "description": "Retrieve a list of all users currently stored in the system.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/page-size"
+          },
+          {
+            "$ref": "#/components/parameters/page-before"
+          },
+          {
+            "$ref": "#/components/parameters/page-after"
+          }
+        ],
+        "security": [
+          {
+            "jwt": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/users"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new user in the store",
+        "tags": [
+          "users"
+        ],
+        "security": [
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "operationId": "storeUser",
+        "description": "Create a new user that will be stored in the database",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/user"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/user"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          },
+          "409": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login authentication that is useful for obtaining tokens that are in jwt or paseto format.",
+        "tags": [
+          "auth"
+        ],
+        "operationId": "storeAuth",
+        "security": [
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "description": "",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/login"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/token"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "summary": "Logout authentication is useful for deleting all login data from the system.",
+        "tags": [
+          "auth"
+        ],
+        "operationId": "destroyAuth",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/data-nullable"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      }
+    },
+    "/auth/role": {
+      "patch": {
+        "summary": "Update or Insert role of users",
+        "tags": [
+          "auth"
+        ],
+        "operationId": "upsertRole",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/data"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/upsert-role"
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "get": {
+        "summary": "Refresh token authentication is useful for getting the access token again ",
+        "tags": [
+          "auth"
+        ],
+        "security": [
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "operationId": "indexAuth",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/token-no-cookies"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "patch": {
+        "summary": "Reset password authentication that is useful for user forgot the password",
+        "tags": [
+          "auth"
+        ],
+        "operationId": "editUser",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/reset-password"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/user"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "summary": "Get user from store by id",
+        "tags": [
+          "users"
+        ],
+        "operationId": "getById",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/user"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update by replacing all data in the user",
+        "tags": [
+          "users"
+        ],
+        "operationId": "updateUser",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/user"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/user"
+        }
+      },
+      "patch": {
+        "summary": "Edit a user by replacing only the changed data in the user",
+        "tags": [
+          "users"
+        ],
+        "operationId": "editUser",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/user"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/user"
+        }
+      },
+      "delete": {
+        "summary": "Delete user by user id",
+        "tags": [
+          "users"
+        ],
+        "operationId": "destroyUser",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/data-nullable"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      },
+      "post": {
+        "summary": "Restore user from store by user id",
+        "tags": [
+          "users"
+        ],
+        "operationId": "restoreUser",
+        "description": "",
+        "security": [
+          {
+            "jwt": []
+          },
+          {
+            "x-csrf-token": []
+          },
+          {},
+          {
+            "x-test-client": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/user-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/data-nullable"
+          },
+          "400": {
+            "$ref": "#/components/responses/errors"
+          },
+          "401": {
+            "$ref": "#/components/responses/errors"
+          },
+          "403": {
+            "$ref": "#/components/responses/errors"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "page-size": {
+        "name": "size",
+        "in": "query",
+        "description": "How many items to return at one time (max 100)",
+        "required": true,
+        "schema": {
+          "default": 100,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "page-before": {
+        "name": "before",
+        "in": "query",
+        "description": "Used to get data by after this id. ID format use KSUID,KSUID is for K-Sortable Unique IDentifier. It is a kind of globally unique identifier similar to a RFC 4122 UUID, built from the ground-up to be \"naturally\" sorted by generation timestamp without any special type-aware logic.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "ksuid",
+          "minLength": 27,
+          "maxLength": 27
+        }
+      },
+      "page-after": {
+        "name": "after",
+        "in": "query",
+        "description": "Used to get data by after this id. ID format use KSUID,KSUID is for K-Sortable Unique IDentifier. It is a kind of globally unique identifier similar to a RFC 4122 UUID, built from the ground-up to be \"naturally\" sorted by generation timestamp without any special type-aware logic.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "ksuid",
+          "minLength": 27,
+          "maxLength": 27
+        }
+      },
+      "user-id": {
+        "name": "userId",
+        "in": "path",
+        "description": "Useful for identifying users by userId, enabling the server to take actions on the identified user.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "ksuid",
+          "minLength": 27,
+          "maxLength": 27
+        }
+      },
+      "search": {
+        "name": "search",
+        "in": "query",
+        "description": "Used to obtain data by certain keywords",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 0
+        }
+      },
+      "user_id": {
+        "$ref": "#/components/parameters/user-id"
+      },
+      "size": {
+        "$ref": "#/components/parameters/page-size"
+      },
+      "after": {
+        "$ref": "#/components/parameters/page-after"
+      },
+      "before": {
+        "$ref": "#/components/parameters/page-before"
+      }
+    },
+    "schemas": {
+      "user": {
+        "type": "object",
+        "required": [
+          "username",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "ksuid",
+            "minLength": 27,
+            "maxLength": 27,
+            "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "minLength": 36
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "writeOnly": true
+          }
+        }
+      },
+      "users": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/user"
+        }
+      },
+      "response-users": {
+        "type": "object",
+        "required": [
+          "data",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/users"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "links": {
+            "type": "object",
+            "properties": {
+              "first": {
+                "type": "string"
+              },
+              "last": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              },
+              "self": {
+                "type": "string"
+              },
+              "related": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "required": [
+          "title",
+          "status",
+          "code",
+          "detail"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/error"
+        }
+      },
+      "response-errors": {
+        "type": "object",
+        "required": [
+          "errors"
+        ],
+        "properties": {
+          "errors": {
+            "$ref": "#/components/schemas/errors"
+          }
+        }
+      },
+      "response-user": {
+        "type": "object",
+        "required": [
+          "data",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/user"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "token": {
+        "type": "object",
+        "required": [
+          "access_token"
+        ],
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "expired_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "response-token": {
+        "type": "object",
+        "required": [
+          "data",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/token"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "response-data-nullable": {
+        "type": "object",
+        "required": [
+          "data",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "data": {
+            "type": "null"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "response-data": {
+        "type": "object",
+        "required": [
+          "data",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "response_users": {
+        "$ref": "#/components/schemas/response-users"
+      },
+      "response_user": {
+        "$ref": "#/components/schemas/response-user"
+      },
+      "response_errors": {
+        "$ref": "#/components/schemas/response-errors"
+      },
+      "response_data_nullable": {
+        "$ref": "#/components/schemas/response-data-nullable"
+      },
+      "response_data": {
+        "$ref": "#/components/schemas/response-data"
+      }
+    },
+    "responses": {
+      "users": {
+        "description": "Successfully Get All Users Response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-users"
+            }
+          }
+        }
+      },
+      "errors": {
+        "description": "Response When Errors",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-errors"
+            }
+          }
+        }
+      },
+      "user": {
+        "description": "Successfully Get User Response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-user"
+            }
+          }
+        }
+      },
+      "token": {
+        "description": "Successfully Get Token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-token"
+            }
+          }
+        },
+        "headers": {
+          "Set-Cookie": {
+            "schema": {
+              "type": "string",
+              "example": "refresh_token=jwt_token_or_paseto_token; Path=/; HttpOnly",
+              "writeOnly": true
+            }
+          }
+        }
+      },
+      "data-nullable": {
+        "description": "Response for data nullable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-data-nullable"
+            }
+          }
+        }
+      },
+      "data": {
+        "description": "Response for data Additional Properties",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-data"
+            }
+          }
+        }
+      },
+      "token-no-cookies": {
+        "description": "Successfully Get Token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response-token"
+            }
+          }
+        }
+      },
+      "data_nullable": {
+        "$ref": "#/components/responses/data-nullable"
+      }
+    },
+    "requestBodies": {
+      "user": {
+        "description": "Request body when creating a new user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/user"
+            }
+          }
+        }
+      },
+      "login": {
+        "description": "Request body when login user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "email",
+                "password"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "password": {
+                  "type": "string",
+                  "minLength": 8
+                }
+              }
+            }
+          }
+        }
+      },
+      "upsert-role": {
+        "description": "Request body when upsert role user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "email",
+                "role_name"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "role_name": {
+                  "type": "string",
+                  "minLength": 4
+                }
+              }
+            }
+          }
+        }
+      },
+      "reset-password": {
+        "description": "Request body when reset password user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "password",
+                "confirm_password"
+              ],
+              "properties": {
+                "password": {
+                  "type": "string",
+                  "minLength": 8
+                },
+                "confirm_password": {
+                  "type": "string",
+                  "minLength": 8
+                }
+              }
+            }
+          }
+        }
+      },
+      "otp": {
+        "description": "Request body when verification otp user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "code_otp"
+              ],
+              "properties": {
+                "code_otp": {
+                  "type": "integer",
+                  "minLength": 6
+                }
+              }
+            }
+          }
+        }
+      },
+      "requests_user": {
+        "$ref": "#/components/requestBodies/user"
+      },
+      "request_login": {
+        "$ref": "#/components/requestBodies/login"
+      },
+      "request_reset_password": {
+        "$ref": "#/components/requestBodies/reset-password"
+      },
+      "request_otp": {
+        "$ref": "#/components/requestBodies/otp"
+      },
+      "request_upsert_role": {
+        "$ref": "#/components/requestBodies/upsert-role"
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "paseto": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "PASETO"
+      },
+      "x-test-client": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-TEST-CLIENT"
+      },
+      "x-csrf-token": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-TOKEN"
+      }
+    }
+  }
+}
