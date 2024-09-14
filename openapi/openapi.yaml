@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: RESTful API Auth
+  version: 1.0.0
+  contact:
+    name: Tirta Hakim Pambudhi
+    email: tirtanewwhakim22@gmail.com
+    url: https://github.com/tirtahakimpambudhi
+  license:
+    name: APACHE 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+tags:
+  - name: users
+    description: the tags 'Users' used for grouping the path related users
+  - name: auth
+    description: the tags 'Auth' used for grouping the path related Authentication
+servers:
+  - description: Localhost Server
+    url: http://localhost:{port}/api/{version}
+    variables:
+      port:
+        default: "80"
+        enum:
+          - "80"
+          - "3001"
+          - "5400"
+      version:
+        default: v1
+        enum:
+          - v1
+
+  - description: Public Server
+    url: http://{sub-domain}.{top-domain}:{port}/api/{version}
+    variables:
+      sub-domain:
+        default: authserver
+        enum:
+          - authserver
+      top-domain:
+        default: com
+        enum:
+          - com
+          - id
+          - xyz
+          - dev
+      port:
+        default: "80"
+        enum:
+          - "80"
+          - "443"
+      version:
+        default: v1
+        enum:
+          - v1
+paths:
+  /users:
+    $ref: "./resources/users.yaml"
+  /auth/login: 
+    $ref: "./resources/auth-login.yaml"
+  /auth/logout:
+    $ref: "./resources/auth-logout.yaml"
+  /auth/role:
+    $ref: "./resources/auth-upsert-role.yaml"
+  /auth/refresh-token: 
+    $ref: "./resources/auth-refresh-token.yaml"
+  /auth/reset-password: 
+    $ref: "./resources/auth-reset-password.yaml"
+  /users/{userId}:
+    $ref: "./resources/user-id.yaml"
+
+components:
+  parameters:
+    $ref: "./parameters/_index.yaml"
+  schemas:
+    $ref: "./schemas/_index.yaml"
+  responses:
+    $ref: "./responses/_index.yaml"
+  requestBodies:  
+    $ref: "./requests/_index.yaml"
+  securitySchemes:
+    $ref: "./security/_index.yaml"
