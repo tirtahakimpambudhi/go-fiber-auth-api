@@ -1,0 +1,14 @@
+user_id: 
+  $ref: "./path/user-id.yaml"
+
+size:
+  $ref: "./query/page-size.yaml"
+
+after:
+  $ref: "./query/page-after.yaml"
+
+before:
+  $ref: "./query/page-before.yaml"
+
+search:
+  $ref: "./query/search.yaml"
