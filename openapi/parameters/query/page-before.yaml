@@ -1,0 +1,9 @@
+name: before
+in: query
+description: Used to get data by after this id. ID format use KSUID,KSUID is for K-Sortable Unique IDentifier. It is a kind of globally unique identifier similar to a RFC 4122 UUID, built from the ground-up to be "naturally" sorted by generation timestamp without any special type-aware logic.
+required: false
+schema:
+  type: string
+  format: ksuid
+  minLength: 27
+  maxLength: 27
