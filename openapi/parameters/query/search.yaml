@@ -1,0 +1,7 @@
+name: search
+in: query
+description: Used to obtain data by certain keywords
+required: false
+schema:
+  type: string
+  minLength: 0
