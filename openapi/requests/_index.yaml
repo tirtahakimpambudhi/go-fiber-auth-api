@@ -1,0 +1,10 @@
+requests_user:
+  $ref: "./json/user.yaml"
+request_login:
+  $ref: "./json/login.yaml"
+request_reset_password:
+  $ref: "./json/reset-password.yaml"
+request_otp:
+  $ref: "./json/otp.yaml"
+request_upsert_role:
+  $ref: "./json/upsert-role.yaml"
