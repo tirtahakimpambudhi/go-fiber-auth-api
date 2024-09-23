@@ -1,0 +1,11 @@
+description: "Request body when verification otp user"
+content:
+  "application/json":
+    schema:
+      type: object
+      required:
+        - code_otp
+      properties:
+        code_otp:
+          type: integer
+          minLength: 6
