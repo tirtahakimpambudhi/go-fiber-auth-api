@@ -1,0 +1,15 @@
+description: "Request body when upsert role user"
+content:
+  "application/json":
+    schema:
+      type: object
+      required:
+        - email
+        - role_name
+      properties:
+        email:
+          type: string
+          format: email
+        role_name:
+          type: string
+          minLength: 4
