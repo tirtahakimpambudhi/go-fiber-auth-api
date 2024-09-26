@@ -1,0 +1,5 @@
+description: "Request body when creating a new user"
+content:
+  "application/json":
+    schema:
+      $ref: "../../schemas/user.yaml"
