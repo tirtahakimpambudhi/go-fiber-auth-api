@@ -1,0 +1,22 @@
+post:
+  summary: "Login authentication that is useful for obtaining tokens that are in jwt or paseto format."
+  tags:
+    - auth
+  operationId: "storeAuth"
+  security:
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  description: ""
+  requestBody:
+    $ref: "../requests/json/login.yaml"
+  responses:
+    "200": 
+      $ref: "../responses/json/token.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
