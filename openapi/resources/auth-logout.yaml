@@ -1,0 +1,21 @@
+delete:
+  summary: "Logout authentication is useful for deleting all login data from the system."
+  tags:
+    - auth
+  operationId: "destroyAuth"
+  description: ""
+  security:
+    - jwt: []
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  responses:
+    "200": 
+      $ref: "../responses/json/data-nullable.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
