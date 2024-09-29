@@ -1,0 +1,19 @@
+get:
+  summary: "Refresh token authentication is useful for getting the access token again "
+  tags:
+    - auth
+  security:
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  operationId: "indexAuth"
+  responses:
+    "200": 
+      $ref: "../responses/json/token-no-cookies.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
