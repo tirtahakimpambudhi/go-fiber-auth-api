@@ -1,0 +1,25 @@
+patch:
+  summary: "Update or Insert role of users"
+  tags:
+    - auth
+  operationId: "upsertRole"
+  description: ""
+  security:
+    - jwt: []
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  responses:
+    "200":
+      $ref: "../responses/json/data.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+  requestBody:
+    $ref: "../requests/json/upsert-role.yaml"
