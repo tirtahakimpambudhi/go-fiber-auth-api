@@ -1,0 +1,131 @@
+get:
+  summary: "Get user from store by id"
+  tags:
+    - users
+  operationId: "getById"
+  description: ""
+  security:
+    - jwt: []
+    - {}
+    - x-test-client: []
+
+  parameters:
+    - $ref: "../parameters/path/user-id.yaml"
+  responses:
+    "200":
+      $ref: "../responses/json/user.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+
+put:
+  summary: "Update by replacing all data in the user"
+  tags:
+    - users
+  operationId: "updateUser"
+  description: ""
+  security:
+    - jwt: []
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  parameters:
+    - $ref: "../parameters/path/user-id.yaml"
+  responses:  
+    "200": 
+      $ref: "../responses/json/user.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+  requestBody:
+    $ref: "../requests/json/user.yaml"
+
+patch:
+  summary: "Edit a user by replacing only the changed data in the user"
+  tags:
+    - users
+  operationId: "editUser"
+  description: ""
+  security:
+    - jwt: []
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  parameters:
+    - $ref: "../parameters/path/user-id.yaml"
+  responses:  
+    "200": 
+      $ref: "../responses/json/user.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+  requestBody:
+    $ref: "../requests/json/user.yaml"
+
+delete:
+  summary: "Delete user by user id"
+  tags:
+    - users
+  operationId: "destroyUser"
+  description: ""
+  security:
+    - jwt: []
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  parameters:
+    - $ref: "../parameters/path/user-id.yaml"
+  responses:  
+    "200": 
+      $ref: "../responses/json/data-nullable.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+post:
+  summary: "Restore user from store by user id"
+  tags:
+    - users
+  operationId: "restoreUser"
+  description: ""
+  security:
+    - jwt: []
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  parameters:
+    - $ref: "../parameters/path/user-id.yaml"
+  responses:
+    "200":
+      $ref: "../responses/json/data-nullable.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
