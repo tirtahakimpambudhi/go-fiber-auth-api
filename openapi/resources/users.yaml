@@ -1,0 +1,52 @@
+get: 
+  summary: Get all users in the store
+  tags:
+    - users
+  operationId: indexUsers
+  description: Retrieve a list of all users currently stored in the system.
+  parameters: 
+    - $ref: "../parameters/query/page-size.yaml"
+    - $ref: "../parameters/query/page-before.yaml"
+    - $ref: "../parameters/query/page-after.yaml"
+  security:
+    - jwt: []
+    - {}
+    - x-test-client: []
+  responses: 
+    "200": 
+      $ref: "../responses/json/users.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "401":
+      $ref: "../responses/json/errors.yaml"
+    "403":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+
+post: 
+  summary: Create a new user in the store
+  tags: 
+    - users
+  security:
+    - x-csrf-token: []
+    - {}
+    - x-test-client: []
+
+  operationId: storeUser
+  description: Create a new user that will be stored in the database
+  requestBody:  
+    $ref: "../requests/json/user.yaml"
+  responses: 
+    "201": 
+      $ref: "../responses/json/user.yaml"
+    "400":
+      $ref: "../responses/json/errors.yaml"
+    "404":
+      $ref: "../responses/json/errors.yaml"
+    "409":
+      $ref: "../responses/json/errors.yaml"
+
+
+                   
+      
