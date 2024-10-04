@@ -1,0 +1,12 @@
+users:
+  $ref: "./json/users.yaml"
+user:
+  $ref: "./json/user.yaml"
+token:
+  $ref: "./json/token.yaml"
+data_nullable:
+  $ref: "./json/data-nullable.yaml"
+data:
+  $ref: "./json/data.yaml"
+errors:
+  $ref: "./json/errors.yaml"
