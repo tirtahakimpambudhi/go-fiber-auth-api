@@ -1,0 +1,6 @@
+description: "Response for data nullable"
+content:
+  application/json:
+    schema:
+      $ref : "../../schemas/response-data-nullable.yaml"
+
