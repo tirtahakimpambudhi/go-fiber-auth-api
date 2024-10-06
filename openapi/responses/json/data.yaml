@@ -1,0 +1,6 @@
+description: "Response for data Additional Properties"
+content:
+  application/json:
+    schema:
+      $ref : "../../schemas/response-data.yaml"
+
