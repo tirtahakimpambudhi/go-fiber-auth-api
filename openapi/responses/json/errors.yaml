@@ -1,0 +1,5 @@
+description: "Response When Errors"
+content:
+  application/json:
+    schema:
+      $ref: "../../schemas/response-errors.yaml"
