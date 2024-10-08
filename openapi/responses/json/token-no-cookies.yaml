@@ -1,0 +1,5 @@
+description: "Successfully Get Token"
+content:
+  application/json:
+    schema:
+      $ref : "../../schemas/response-token.yaml"
