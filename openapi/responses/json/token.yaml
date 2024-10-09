@@ -1,0 +1,11 @@
+description: "Successfully Get Token"
+content:
+  application/json:
+    schema:
+      $ref : "../../schemas/response-token.yaml"
+headers: 
+  Set-Cookie:
+    schema: 
+      type: string
+      example: refresh_token=jwt_token_or_paseto_token; Path=/; HttpOnly
+      writeOnly: true
