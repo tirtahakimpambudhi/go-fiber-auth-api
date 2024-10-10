@@ -1,0 +1,5 @@
+description: "Successfully Get All Users Response"
+content:
+  application/json:
+    schema:
+      $ref : "../../schemas/response-users.yaml"
