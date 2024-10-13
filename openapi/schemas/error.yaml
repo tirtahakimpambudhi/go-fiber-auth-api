@@ -1,0 +1,20 @@
+type: object
+required:
+  - title
+  - status
+  - code
+  - detail
+properties:
+  title:
+    type: string
+  status:
+    type: integer
+    format: int32
+  code:
+    type: string
+  detail:
+    type: string
+  meta:
+    type: object
+    additionalProperties: true
+
