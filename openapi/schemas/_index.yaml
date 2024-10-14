@@ -1,0 +1,18 @@
+user:
+  $ref: "./user.yaml"
+users:
+  $ref: "./users.yaml"
+error:
+  $ref: "./error.yaml"
+errors:
+  $ref: "./errors.yaml"
+response_users:
+  $ref: "./response-users.yaml"
+response_user:
+  $ref: "./response-user.yaml"
+response_errors:
+  $ref: "./response-errors.yaml"
+response_data_nullable:
+  $ref: "./response-data-nullable.yaml"
+response_data:
+  $ref: "./response-data.yaml"
