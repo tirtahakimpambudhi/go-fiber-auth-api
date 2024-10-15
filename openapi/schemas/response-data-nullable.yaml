@@ -1,0 +1,20 @@
+type: object
+required:
+  - data
+  - status
+  - code
+properties:
+  data:
+    type: "null"
+    # oneOf:
+    #   - $ref: "./user.yaml"
+    #   - $ref: "./token.yaml"
+    # nullable: true
+  status:
+    type: integer
+  code:
+    type: string
+  meta:
+    type: object
+    additionalProperties: true
+
