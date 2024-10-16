@@ -1,0 +1,17 @@
+type: object
+required:
+  - data
+  - status
+  - code
+properties:
+  data:
+    type: object
+    additionalProperties: true
+  status:
+    type: integer
+  code:
+    type: string
+  meta:
+    type: object
+    additionalProperties: true
+
