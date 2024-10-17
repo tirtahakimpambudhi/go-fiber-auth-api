@@ -1,0 +1,6 @@
+type: object
+required:
+  - errors
+properties:
+  errors: 
+    $ref: "./errors.yaml"
