@@ -1,0 +1,15 @@
+type: object
+required:
+  - data
+  - status
+  - code
+properties:
+  data:
+    $ref: "./token.yaml"
+  status:
+    type: integer
+  code:
+    type: string
+  meta:
+    type: object
+    additionalProperties: true
