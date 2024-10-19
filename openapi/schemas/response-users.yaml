@@ -1,0 +1,28 @@
+type: object
+required:
+  - data
+  - status
+  - code
+properties:
+  data:
+    $ref: "./users.yaml"
+  status:
+    type: integer
+  code:
+    type: string
+  meta:
+    type: object
+    additionalProperties: true
+  links:  
+    type: object
+    properties:
+      first: 
+        type: string
+      last: 
+        type: string
+      next:
+        type: string
+      self:
+        type: string
+      related:
+        type: string
