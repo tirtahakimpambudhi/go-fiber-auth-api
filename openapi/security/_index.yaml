@@ -1,0 +1,8 @@
+jwt:
+  $ref: "./jwt-token.yaml"
+paseto:
+  $ref: "./paseto-token.yaml"
+x-test-client:
+  $ref: "./x-test-client.yaml"
+x-csrf-token:
+  $ref: "./x-csrf-token.yaml"
