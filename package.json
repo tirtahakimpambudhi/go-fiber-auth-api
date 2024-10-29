@@ -1,0 +1,20 @@
+{
+  "name": "openapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "redocly bundle openapi/openapi.yaml --output docs/v1/swagger.json",
+    "html": "redocly build-docs dist/openapi.json --output docs/v1/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@redocly/cli": "^1.19.0",
+    "@stoplight/spectral-cli": "^6.11.1"
+  },
+  "devDependencies": {
+    "newman": "^6.2.0"
+  }
+}
