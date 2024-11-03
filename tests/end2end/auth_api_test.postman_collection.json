@@ -1,0 +1,1108 @@
+{
+	"info": {
+		"_postman_id": "21e5be78-1aad-496f-af68-55072accd69a",
+		"name": "Auth API Test",
+		"description": "This collection Auth API Test contains authentication authorization test cases",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24255225",
+		"_collection_link": "https://bold-rocket-276238.postman.co/workspace/coba~24c86921-41cc-4d11-ade1-089485e3b528/collection/24255225-21e5be78-1aad-496f-af68-55072accd69a?action=share&source=collection_link&creator=24255225"
+	},
+	"item": [
+		{
+			"name": "Successfully Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const requestBody = JSON.parse(pm.request.body.raw);",
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"id\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"username\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"email\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"created_at\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"updated_at\"); ",
+							"});",
+							"",
+							"pm.test(\"It should status code 201 successfully register and set the environment variable\", function () {",
+							"    ",
+							"    // match the status code and data",
+							"    pm.expect(responseBody?.status).to.eql(201);",
+							"    pm.expect(responseBody?.code).to.contains(\"CREATED\");",
+							"",
+							"    pm.environment.set(\"userId\",responseBody?.data?.id);",
+							"    pm.environment.set(\"email\",requestBody?.email);",
+							"    pm.environment.set(\"username\",requestBody?.username);",
+							"    pm.environment.set(\"password\",requestBody?.password);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"email\" : \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Register Invalid Request Body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 422 and validation error\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.eql(\"Validation Error\");",
+							"        pm.expect(error?.status).to.eql(422);",
+							"        pm.expect(error?.code).to.eql(\"Unprocessable Entity\");",
+							"        pm.expect(error?.detail).to.contains(\"Username\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Register Email Conflict",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 409 and check error is email conflict\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.contains(\"CONFLICT\");",
+							"        pm.expect(error?.status).to.eql(409);",
+							"        pm.expect(error?.code).to.eql(\"CONFLICT\");",
+							"        pm.expect(error?.detail).to.contains(\"email\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"email\" : \"{{email}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Login Wrong Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 401 and unauthorized\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.false;",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.contains(\"UNAUTHORIZED\");",
+							"        pm.expect(error?.status).to.eql(401);",
+							"        pm.expect(error?.code).to.eql(\"UNAUTHORIZED\");",
+							"        pm.expect(error?.detail).to.contains(\"wrong\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"{{email}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Login Invalid Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 422 and Unprocessable Entity\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.false;",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.eql(\"Validation Error\");",
+							"        pm.expect(error?.status).to.eql(422);",
+							"        pm.expect(error?.code).to.eql(\"Unprocessable Entity\");",
+							"        pm.expect(error?.detail).to.contains(\"Field\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"{{email}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Login Users Not Registered",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 404 and not found users\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.false;",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.eql(\"NOT_FOUND\");",
+							"        pm.expect(error?.status).to.eql(404);",
+							"        pm.expect(error?.code).to.eql(\"NOT_FOUND\");",
+							"        pm.expect(error?.detail).to.contains(\"not exists\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"access_token\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"expired_at\"); ",
+							"});",
+							"",
+							"pm.test(\"It should status code 200 successfully login and set the environment variable\", function () {",
+							"    ",
+							"    // match the status code and data",
+							"    pm.expect(responseBody?.status).to.eql(200);",
+							"    pm.expect(responseBody?.code).to.contains(\"OK\");",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.true;",
+							"    pm.environment.set(\"accessToken\",responseBody?.data?.access_token);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"access_token\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"expired_at\"); ",
+							"});",
+							"",
+							"pm.test(\"It should status code 200 successfully refresh-token and set the environment variable\", function () {",
+							"    ",
+							"    // match the status code and data",
+							"    pm.expect(responseBody?.status).to.eql(200);",
+							"    pm.expect(responseBody?.code).to.contains(\"OK\");",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.true;",
+							"    pm.environment.set(\"accessToken\",responseBody?.data?.access_token);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/refresh-token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Update Invalid Request Body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"It should status code 422 and validation error\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.eql(\"Validation Error\");",
+							"        pm.expect(error?.status).to.eql(422);",
+							"        pm.expect(error?.code).to.eql(\"Unprocessable Entity\");",
+							"        pm.expect(error?.detail).to.contains(\"Username\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\" : \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Update Access Denied",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 403 and access denied\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.eql(\"FORBIDDEN\");",
+							"        pm.expect(error?.status).to.eql(403);",
+							"        pm.expect(error?.code).to.eql(\"FORBIDDEN\");",
+							"        pm.expect(error?.detail).to.eql(\"Access denied\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"email\" : \"{{email}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{randomKSUID}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{randomKSUID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const requestBody = JSON.parse(pm.request.body.raw);",
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\");",
+							"});",
+							"",
+							"pm.test(\"It should status code 200 and has updated users\", function () {",
+							"    pm.expect(responseBody?.data.username).to.eql(requestBody.username);",
+							"    pm.expect(responseBody?.data.email).to.eql(requestBody.email);",
+							"",
+							"    pm.environment.set(\"username\",responseBody?.data.username);",
+							"    pm.environment.set(\"email\",responseBody?.data.email);",
+							"    pm.environment.set(\"password\",requestBody?.password)",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"email\" : \"{{email}}\",\n    \"password\": \"{{$randomPassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"access_token\");",
+							"    pm.expect(responseBody?.data).to.ownProperty(\"expired_at\"); ",
+							"});",
+							"",
+							"pm.test(\"It should status code 200 successfully  refresh-token and set the environment variable\", function () {",
+							"    ",
+							"    // match the status code and data",
+							"    pm.expect(responseBody?.status).to.eql(200);",
+							"    pm.expect(responseBody?.code).to.contains(\"OK\");",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.true;",
+							"    pm.environment.set(\"accessToken\",responseBody?.data?.access_token);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/refresh-token",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Get By ID Self",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\");",
+							"});",
+							"",
+							"pm.test(\"It should status code 200 successfully match the data to environment\", function () {",
+							"    ",
+							"    // match the status code and data",
+							"    pm.expect(responseBody?.status).to.eql(200);",
+							"    pm.expect(responseBody?.code).to.contains(\"OK\");",
+							"    pm.expect(responseBody?.data.id).to.eql(pm.environment.get(\"userId\"));",
+							"    pm.expect(responseBody?.data.username).to.eql(pm.environment.get(\"username\"));",
+							"    pm.expect(responseBody?.data.email).to.eql(pm.environment.get(\"email\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Get By ID Access Denied",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"errors\");    ",
+							"    responseBody.errors.forEach( function (error) {",
+							"        pm.expect(error).to.ownProperty(\"status\");",
+							"        pm.expect(error).to.ownProperty(\"code\");",
+							"        pm.expect(error).to.ownProperty(\"title\");",
+							"        pm.expect(error).to.ownProperty(\"detail\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"It should status code 403 and access denied\", function () {",
+							"    pm.expect(responseBody?.errors).to.length(1);",
+							"",
+							"    responseBody?.errors?.forEach(function (error) {",
+							"        pm.expect(error?.title).to.eql(\"FORBIDDEN\");",
+							"        pm.expect(error?.status).to.eql(403);",
+							"        pm.expect(error?.code).to.eql(\"FORBIDDEN\");",
+							"        pm.expect(error?.detail).to.eql(\"Access denied\");",
+							"    });",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{randomKSUID}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{randomKSUID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = pm.response.json();",
+							"",
+							"pm.test(\"It should response body have standard response\", function () {",
+							"    pm.expect(responseBody).to.ownProperty(\"status\");",
+							"    pm.expect(responseBody).to.ownProperty(\"code\");",
+							"    pm.expect(responseBody).to.ownProperty(\"data\"); ",
+							"});",
+							"",
+							"pm.test(\"It should status code 200 successfully login and set the environment variable\", function () {",
+							"    ",
+							"    // match the status code and data",
+							"    pm.expect(responseBody?.status).to.eql(200);",
+							"    pm.expect(responseBody?.code).to.contains(\"OK\");",
+							"    pm.expect(pm.cookies.has(\"refresh_token\")).to.false;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-TEST-CLIENT",
+						"value": "{{secretTestClient}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
