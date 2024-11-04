@@ -1,0 +1,16 @@
+.env.*
+.gitignore
+.golangci.yaml
+package.json
+node_modules/
+client/
+resource/logs/*
+resource/ssl/*
+.scannerwork/
+artifact/
+package-lock.json
+sonar-project.properties
+script/
+
+db/
+
