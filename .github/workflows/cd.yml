@@ -1,0 +1,11 @@
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "TODO Actual Deploy"
+        run: echo "DUMMY"
