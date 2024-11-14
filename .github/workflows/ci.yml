@@ -18,17 +18,15 @@ jobs:
       - uses: actions/checkout@v4
         name: "Checkout Repository"
 
-      - name: "Setting Environment Variable"
-        run: |
-          echo "POSTGRES_DB=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-          echo "POSTGRES_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "REDIS_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
     services:
       postgres:
         image: postgres
         ports:
           - 5432:5432
+        env:
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -36,6 +34,8 @@ jobs:
           --health-retries 5
       redis:
         image: redis
+        env:
+          REDIS_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 6739:6739
         options: >-
