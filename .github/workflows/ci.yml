@@ -46,7 +46,7 @@ jobs:
           args: --config .golangci.yaml
 
       - name: Running Unit Test Go
-        run: go mod download && make tests_nocov
+        run: go mod download && make tests
 
   smoke_test:
     name: "Smoke Test Container Of Image before Push to Registry"
