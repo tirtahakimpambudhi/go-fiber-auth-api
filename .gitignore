@@ -3,10 +3,10 @@
 .env.dev.*
 node_modules/
 client/
-resource/logs/
-resource/ssl/
+resource/logs/*.log
+resource/ssl/*.pem
 .scannerwork/
-artifact
+artifact/**/*.out
 script/
 sonar-project.properties
 docker-compose.yml
