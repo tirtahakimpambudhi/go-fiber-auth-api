@@ -14,7 +14,7 @@ lint:
 	@golangci-lint run ./...
 
 tests:
-	@go test ./... -coverprofile=./coverage.out
+	@go test ./... -coverprofile=artifact/coverage/coverage.out
 
 
 tests_nocov:
