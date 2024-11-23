@@ -70,7 +70,7 @@ jobs:
       redis:
         image: redis
         env:
-          REDIS_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.CACHE_DB_PASS  }}
         ports:
           - 6739:6739
         options: >-
