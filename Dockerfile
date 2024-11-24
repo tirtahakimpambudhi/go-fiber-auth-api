@@ -29,10 +29,10 @@ ARG username
 
 # Set environment variables (can be overridden during runtime)
 ENV PORT="" \
-    CACHE_DB_NAME=1 \
+    CACHE_DB_NAME=0 \
     CACHE_DB_HOST="" \
     CACHE_DB_PORT=6379 \
-    CACHE_DB_USER="default" \
+    CACHE_DB_USER="" \
     CACHE_DB_PASS="" \
     CACHE_DB_MAX_CON=100 \
     CACHE_DB_MIN_CON=10 \
