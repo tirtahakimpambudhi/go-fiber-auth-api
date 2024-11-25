@@ -69,8 +69,6 @@ jobs:
           --health-retries 5
       redis:
         image: redis
-        env:
-          REDIS_PASSWORD: ${{ secrets.CACHE_DB_PASS  }}
         ports:
           - 6739:6739
         options: >-
@@ -115,11 +113,8 @@ jobs:
             --name ${{ secrets.CONTAINER_NAME }} \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
             -e PORT=${{ secrets.PORT }} \
-            -e CACHE_DB_NAME=${{ secrets.CACHE_DB_NAME }} \
             -e CACHE_DB_HOST=${{ secrets.CACHE_DB_HOST }} \
             -e CACHE_DB_PORT=${{ secrets.CACHE_DB_PORT }} \
-            -e CACHE_DB_USER=${{ secrets.CACHE_DB_USER }} \
-            -e CACHE_DB_PASS=${{ secrets.CACHE_DB_PASS }} \
             -e CACHE_DB_MAX_CON=${{ secrets.CACHE_DB_MAX_CON }} \
             -e CACHE_DB_MIN_CON=${{ secrets.CACHE_DB_MIN_CON }} \
             -e CACHE_DB_MAX_TIME=${{ secrets.CACHE_DB_MAX_TIME }} \
