@@ -10,11 +10,11 @@ import (
 
 // RedisConfig holds the configuration for connecting to Redis.
 type RedisConfig struct {
-	Name     int    `env:"CACHE_DB_NAME,required"`            // Redis database name.
+	Name     int    `env:"CACHE_DB_NAME"`                     // Redis database name.
 	Host     string `env:"CACHE_DB_HOST,required"`            // Redis server hostname.
 	Port     int    `env:"CACHE_DB_PORT,required"`            // Redis server port.
-	User     string `env:"CACHE_DB_USER,required"`            // Redis username.
-	Password string `env:"CACHE_DB_PASS,required"`            // Redis password.
+	User     string `env:"CACHE_DB_USER"`                     // Redis username.
+	Password string `env:"CACHE_DB_PASS"`                     // Redis password.
 	MaxCon   int    `env:"CACHE_DB_MAX_CON" envDefault:"100"` // Maximum number of connections.
 	MinCon   int    `env:"CACHE_DB_MIN_CON" envDefault:"10"`  // Minimum number of connections.
 	MaxTime  int    `env:"CACHE_DB_MAX_TIME" envDefault:"10"` // Maximum idle connection time (in minutes).
@@ -33,14 +33,24 @@ func NewConfig() (*RedisConfig, error) {
 
 // NewClient creates a new Redis client using the configuration.
 func (redisConfig *RedisConfig) NewClient() *redis.Client {
+	addr := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
+	if redisConfig.User == "" || redisConfig.Password == "" {
+		return redis.NewClient(&redis.Options{
+			Addr:            addr,
+			MinIdleConns:    redisConfig.MinCon,                               // Minimum number of idle connections.
+			MaxIdleConns:    redisConfig.MaxCon,                               // Maximum number of idle connections.
+			ConnMaxIdleTime: time.Duration(redisConfig.MinTime) * time.Minute, // Maximum idle connection time.
+			ConnMaxLifetime: time.Duration(redisConfig.MaxTime) * time.Minute, // Maximum connection lifetime.
+		})
+	}
 	return redis.NewClient(&redis.Options{
-		Addr:            fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port), // Redis server address.
-		Username:        redisConfig.User,                                         // Redis username.
-		Password:        redisConfig.Password,                                     // Redis password.
-		DB:              redisConfig.Name,                                         // Redis database number.
-		MinIdleConns:    redisConfig.MinCon,                                       // Minimum number of idle connections.
-		MaxIdleConns:    redisConfig.MaxCon,                                       // Maximum number of idle connections.
-		ConnMaxIdleTime: time.Duration(redisConfig.MinTime) * time.Minute,         // Maximum idle connection time.
-		ConnMaxLifetime: time.Duration(redisConfig.MaxTime) * time.Minute,         // Maximum connection lifetime.
+		Addr:            addr,                                             // Redis server address.
+		Username:        redisConfig.User,                                 // Redis username.
+		Password:        redisConfig.Password,                             // Redis password.
+		DB:              redisConfig.Name,                                 // Redis database number.
+		MinIdleConns:    redisConfig.MinCon,                               // Minimum number of idle connections.
+		MaxIdleConns:    redisConfig.MaxCon,                               // Maximum number of idle connections.
+		ConnMaxIdleTime: time.Duration(redisConfig.MinTime) * time.Minute, // Maximum idle connection time.
+		ConnMaxLifetime: time.Duration(redisConfig.MaxTime) * time.Minute, // Maximum connection lifetime.
 	})
 }
