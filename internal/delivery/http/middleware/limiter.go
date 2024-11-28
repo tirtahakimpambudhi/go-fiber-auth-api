@@ -13,20 +13,30 @@ import (
 
 // Limiter sets up request rate limiting middleware.
 func Limiter() (fiber.Handler, error) {
+	var storage *redis.Storage
 	// Load Redis cache configuration
 	config, err := cache.NewConfig()
 	if err != nil {
 		return nil, err
 	}
 	// Create Redis storage
-	storage := redis.New(redis.Config{
-		Host:     config.Host,
-		Port:     config.Port,
-		Username: config.User,
-		Password: config.Password,
-		Database: config.Name,
-		Reset:    false,
-	})
+	if config.User == "" || config.Password == "" {
+		storage = redis.New(redis.Config{
+			Host:  config.Host,
+			Port:  config.Port,
+			Reset: false,
+		})
+	} else {
+		storage = redis.New(redis.Config{
+			Host:     config.Host,
+			Port:     config.Port,
+			Username: config.User,
+			Password: config.Password,
+			Database: config.Name,
+			Reset:    false,
+		})
+	}
+
 	// Set up limiter middleware
 	return limiter.New(limiter.Config{
 		Next: func(c *fiber.Ctx) bool {
