@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/storage/redis/v3"
@@ -22,9 +23,9 @@ func Limiter() (fiber.Handler, error) {
 	// Create Redis storage
 	if config.User == "" || config.Password == "" {
 		storage = redis.New(redis.Config{
-			Host:  config.Host,
-			Port:  config.Port,
-			Reset: false,
+			Host: config.Host,
+			Port: config.Port,
+			URL:  fmt.Sprintf("redis://%s:%d", config.Host, config.Port),
 		})
 	} else {
 		storage = redis.New(redis.Config{
