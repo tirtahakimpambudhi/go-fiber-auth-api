@@ -7,21 +7,22 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod download
+RUN go mod download && \
+    adduser \
+            --disabled-password \
+            --gecos "" \
+            --home "/nonexistent" \
+            --shell "/sbin/nologin" \
+            --no-create-home \
+            --uid "${unique_id}" \
+            "${username}"
 
-COPY . .
+COPY --chown=${username}:${username} . .
 
-RUN adduser \
-        --disabled-password \
-        --gecos "" \
-        --home "/nonexistent" \
-        --shell "/sbin/nologin" \
-        --no-create-home \
-        --uid "${unique_id}" \
-        "${username}" \
-    && apk --no-cache add ca-certificates make \
+RUN apk --no-cache add ca-certificates make \
     && make build APP_NAME="main" \
-    && chmod a+x /app/build/main
+    && chmod a+x /app/build/main \
+    && chown -R ${username}:${username} /app
 
 FROM gcr.io/distroless/static-debian12 AS final
 
@@ -89,10 +90,12 @@ COPY --from=builder /etc/group /etc/group
 
 WORKDIR /app
 
-# Copy necessary files from builder stage
-COPY --from=builder /app/build  .
-COPY --from=builder /app/docs /app/docs
-COPY --from=builder /app/resource /app/resource
+USER root
+
+# Copy application files with correct ownership
+COPY --chown=${username}:${username} --from=builder /app/build/main .
+COPY --chown=${username}:${username} --from=builder /app/docs /app/docs
+COPY --chown=${username}:${username} --from=builder /app/resource /app/resource
 
 # Expose the necessary port
 EXPOSE ${PORT}
