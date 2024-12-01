@@ -1,0 +1,43 @@
+FROM node:20-alpine AS builder
+
+ARG username
+ARG unique_id
+
+WORKDIR /app
+
+RUN adduser \
+        --disabled-password \
+        --gecos "" \
+        --home "/nonexistent" \
+        --shell "/sbin/nologin" \
+        --no-create-home \
+        --uid "${unique_id}" \
+        "${username}" \
+    && npm i -g @vercel/ncc  \
+    && npm init es6 -y \
+    && npm i newman@6.2.0
+
+COPY tests/end2end/ .
+
+RUN ncc build index.js -o dist && \
+    chown -R ${username}:${username} /app/dist
+
+FROM node:20-alpine AS production
+ARG username
+
+ENV BASE_URL="" \
+    RANDOM_KSUID="" \
+    SECRET_TEST_CLIENT=""
+
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
+
+COPY --chown=${username}:${username} --from=builder /app/dist .
+COPY --chown=${username}:${username} --from=builder /app/auth_api_test.*.json .
+
+CMD ["index.js"]
+
+
+
+
+
