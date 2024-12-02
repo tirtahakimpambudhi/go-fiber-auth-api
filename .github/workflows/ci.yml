@@ -91,24 +91,83 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Setting .env file for Docker Compose
+        run: |
+          # Commands for .env.dev.auth_api
+          echo "PORT=${{secrets.PORT}}" >> .env.dev.auth_api
+          echo "CACHE_DB_NAME=${{secrets.REDIS_NAME}}" >> .env.dev.auth_api
+          echo "CACHE_DB_HOST=${{secrets.REDIS_HOST}}" >> .env.dev.auth_api
+          echo "CACHE_DB_PORT=${{secrets.REDIS_PORT}}" >> .env.dev.auth_api
+          echo "CACHE_DB_USER=${{secrets.REDIS_USER}}" >> .env.dev.auth_api
+          echo "CACHE_DB_PASS=${{secrets.REDIS_PASSWORD}}" >> .env.dev.auth_api
+          echo "CACHE_DB_MAX_CON=${{secrets.REDIS_MAX_CON}}" >> .env.dev.auth_api
+          echo "CACHE_DB_MIN_CON=${{secrets.REDIS_MIN_CON}}" >> .env.dev.auth_api
+          echo "CACHE_DB_MAX_TIME=${{secrets.REDIS_MAX_TIME}}" >> .env.dev.auth_api
+          echo "CACHE_DB_MIN_TIME=${{secrets.REDIS_MIN_TIME}}" >> .env.dev.auth_api
+          echo "MODEL_PATH=${{secrets.MODEL_PATH}}" >> .env.dev.auth_api
+          echo "FIBER_HOST=${{secrets.FIBER_HOST}}" >> .env.dev.auth_api
+          echo "FIBER_PORT=${{secrets.FIBER_PORT}}" >> .env.dev.auth_api
+          echo "FIBER_PREFORK=${{secrets.FIBER_PREFORK}}" >> .env.dev.auth_api
+          echo "FIBER_STRICT_ROUTING=${{secrets.FIBER_STRICT_ROUTING}}" >> .env.dev.auth_api
+          echo "FIBER_CASE_SENSITIVE=${{secrets.FIBER_CASE_SENSITIVE}}" >> .env.dev.auth_api
+          echo "FIBER_BODY_LIMIT=${{secrets.FIBER_BODY_LIMIT}}" >> .env.dev.auth_api
+          echo "FIBER_READ_TIMEOUT=${{secrets.FIBER_READ_TIMEOUT}}" >> .env.dev.auth_api
+          echo "FIBER_WRITE_TIMEOUT=${{secrets.FIBER_WRITE_TIMEOUT}}" >> .env.dev.auth_api
+          echo "FIBER_REDUCE_MEMU=${{secrets.FIBER_REDUCE_MEMU}}" >> .env.dev.auth_api
+          echo "FIBER_JSON=${{secrets.FIBER_JSON}}" >> .env.dev.auth_api
+          echo "HASH_SALT=${{secrets.HASH_SALT}}" >> .env.dev.auth_api
+          echo "LOG_PATH=${{secrets.LOG_PATH}}" >> .env.dev.auth_api
+          echo "LOG_MAX_SIZE=${{secrets.LOG_MAX_SIZE}}" >> .env.dev.auth_api
+          echo "LOG_MAX_BACKUP=${{secrets.LOG_MAX_BACKUP}}" >> .env.dev.auth_api
+          echo "LOG_MAX_SIZE_ROTATE=${{secrets.LOG_MAX_SIZE_ROTATE}}" >> .env.dev.auth_api
+          echo "LOG_TIME_FORMAT=${{secrets.LOG_TIME_FORMAT}}" >> .env.dev.auth_api
+          echo "LOG_COLOR_OUTPUT=${{secrets.LOG_COLOR_OUTPUT}}" >> .env.dev.auth_api
+          echo "LOG_QUOTE_STR=${{secrets.LOG_QUOTE_STR}}" >> .env.dev.auth_api
+          echo "LOG_END_WITH_MESSAGE=${{secrets.LOG_END_WITH_MESSAGE}}" >> .env.dev.auth_api
+          echo "DB_DRIVER=${{secrets.POSTGRES_DRIVER}}" >> .env.dev.auth_api
+          echo "DB_PROTOCOL=${{secrets.POSTGRES_PROTOCOL}}" >> .env.dev.auth_api
+          echo "DB_NAME=${{secrets.POSTGRES_DB}}" >> .env.dev.auth_api
+          echo "DB_HOST=${{secrets.POSTGRES_HOST}}" >> .env.dev.auth_api
+          echo "DB_PORT=${{secrets.POSTGRES_PORT}}" >> .env.dev.auth_api
+          echo "DB_USER=${{secrets.POSTGRES_USER}}" >> .env.dev.auth_api
+          echo "DB_PASS=${{secrets.POSTGRES_PASSWORD}}" >> .env.dev.auth_api
+          echo "DB_MAX_CON=${{secrets.POSTGRES_MAX_CON}}" >> .env.dev.auth_api
+          echo "DB_MIN_CON=${{secrets.POSTGRES_MIN_CON}}" >> .env.dev.auth_api
+          echo "DB_MAX_TIME=${{secrets.POSTGRES_MAX_TIME}}" >> .env.dev.auth_api
+          echo "DB_MIN_TIME=${{secrets.POSTGRES_MIN_TIME}}" >> .env.dev.auth_api
+          echo "TOKEN_NAME=${{secrets.TOKEN_NAME}}" >> .env.dev.auth_api
+          echo "SECRET_KEY_ACCESS_TOKEN=${{secrets.SECRET_KEY_ACCESS_TOKEN}}" >> .env.dev.auth_api
+          echo "SECRET_KEY_REFRESH_TOKEN=${{secrets.SECRET_KEY_REFRESH_TOKEN}}" >> .env.dev.auth_api
+          echo "SECRET_KEY_FP_TOKEN=${{secrets.SECRET_KEY_FP_TOKEN}}" >> .env.dev.auth_api
+          echo "SECRET_KEY_CSRF=${{secrets.SECRET_KEY_CSRF}}" >> .env.dev.auth_api
+          echo "SECRET_TEST_CLIENT=${{secrets.SECRET_TEST_CLIENT}}" >> .env.dev.auth_api
+          echo "CACHE_TIMEOUT=${{secrets.REDIS_TIMEOUT}}" >> .env.dev.auth_api
+          echo "DB_TIMEOUT=${{secrets.POSTGRES_TIMEOUT}}" >> .env.dev.auth_api
+          echo "DOWN_STREAM_TIMEOUT=${{secrets.DOWN_STREAM_TIMEOUT}}" >> .env.dev.auth_api
+          echo "CORS_ALLOW_METHODS=${{secrets.CORS_ALLOW_METHODS}}" >> .env.dev.auth_api
+          echo "CORS_ALLOW_HEADERS=${{secrets.CORS_ALLOW_HEADERS}}" >> .env.dev.auth_api
+          echo "CORS_EXPOSE_HEADERS=${{secrets.CORS_EXPOSE_HEADERS}}" >> .env.dev.auth_api
+          echo "CORS_ALLOW_ORIGINS=${{secrets.CORS_ALLOW_ORIGINS}}" >> .env.dev.auth_api
+          echo "CORS_ALLOW_CREDENTIALS=${{secrets.CORS_ALLOW_CREDENTIALS}}" >> .env.dev.auth_api
+          
+          # Commands for .env.dev.smoketest
+          echo "BASE_URL=${{secrets.BASE_URL}}" >> .env.dev.smoketest
+          echo "SECRET_TEST_CLIENT=${{secrets.SECRET_TEST_CLIENT}}" >> .env.dev.smoketest
+          echo "RANDOM_KSUID=${{secrets.RANDOM_KSUID}}" >> .env.dev.smoketest
+          
+          # Commands for .env.dev.redis
+          echo "REDIS_PASSWORD=${{secrets.REDIS_PASSWORD}}" >> .env.dev.redis
+          echo "REDIS_PORT=${{secrets.REDIS_PORT}}" >> .env.dev.redis
+          echo "REDIS_DATABASES=${{secrets.REDIS_DATABASES}}" >> .env.dev.redis
+          
+          # Commands for .env.dev.postgres
+          echo "POSTGRES_DB=${{secrets.POSTGRES_DB}}" >> .env.dev.postgres
+          echo "POSTGRES_USER=${{secrets.POSTGRES_USER}}" >> .env.dev.postgres
+          echo "POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env.dev.postgres
 
-      - name: Build Image
-        run: |
-          docker buildx build --load -t ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
-          --build-arg username=${{secrets.APP_USER}} \
-          --build-arg unique_id=${{secrets.APP_ID}} .
-          
-      - name: Verify Redis Connection ( DEBUG )
-        run: |
-          sudo apt-get update && sudo apt-get install -y redis-tools
-          redis-cli -h localhost -p 6379 ping
-          if [ $? -eq 0 ]; then
-            echo "Redis connection successful"
-          else
-            echo "Redis connection failed"
-            exit 1
-          fi
-          
+      - name: Running Docker Compose ( Database Service )
+        run: docker compose -f smoke.docker-compose.yml up postgresql_db redis_db -d
+
       - name: Install golang-migrate
         run: |
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
@@ -116,65 +175,10 @@ jobs:
           which migrate
 
       - name: Migrate Database
-        run: make db_up DB_URL="postgresql://${{secrets.DB_USER}}:${{secrets.DB_PASSWORD}}@localhost:5432/${{secrets.DB_NAME}}?sslmode=disable"
-      - name: Running Container
-        run: |
-          docker run -d \
-            --network host  \
-            --name ${{ secrets.CONTAINER_NAME }} \
-            -e PORT=${{ secrets.PORT }} \
-            -e CACHE_DB_HOST=${{ secrets.CACHE_DB_HOST }} \
-            -e CACHE_DB_PORT=${{ secrets.CACHE_DB_PORT }} \
-            -e CACHE_DB_MAX_CON=${{ secrets.CACHE_DB_MAX_CON }} \
-            -e CACHE_DB_MIN_CON=${{ secrets.CACHE_DB_MIN_CON }} \
-            -e CACHE_DB_MAX_TIME=${{ secrets.CACHE_DB_MAX_TIME }} \
-            -e CACHE_DB_MIN_TIME=${{ secrets.CACHE_DB_MIN_TIME }} \
-            -e MODEL_PATH=${{ secrets.MODEL_PATH }} \
-            -e FIBER_HOST=${{ secrets.FIBER_HOST }} \
-            -e FIBER_PORT=${{ secrets.FIBER_PORT }} \
-            -e FIBER_PREFORK=${{ secrets.FIBER_PREFORK }} \
-            -e FIBER_STRICT_ROUTING=${{ secrets.FIBER_STRICT_ROUTING }} \
-            -e FIBER_CASE_SENSITIVE=${{ secrets.FIBER_CASE_SENSITIVE }} \
-            -e FIBER_BODY_LIMIT=${{ secrets.FIBER_BODY_LIMIT }} \
-            -e FIBER_READ_TIMEOUT=${{ secrets.FIBER_READ_TIMEOUT }} \
-            -e FIBER_WRITE_TIMEOUT=${{ secrets.FIBER_WRITE_TIMEOUT }} \
-            -e FIBER_REDUCE_MEMU=${{ secrets.FIBER_REDUCE_MEMU }} \
-            -e FIBER_JSON=${{ secrets.FIBER_JSON }} \
-            -e HASH_SALT=${{ secrets.HASH_SALT }} \
-            -e LOG_PATH=${{ secrets.LOG_PATH }} \
-            -e LOG_MAX_SIZE=${{ secrets.LOG_MAX_SIZE }} \
-            -e LOG_MAX_BACKUP=${{ secrets.LOG_MAX_BACKUP }} \
-            -e LOG_MAX_SIZE_ROTATE=${{ secrets.LOG_MAX_SIZE_ROTATE }} \
-            -e LOG_TIME_FORMAT=${{ secrets.LOG_TIME_FORMAT }} \
-            -e LOG_COLOR_OUTPUT=${{ secrets.LOG_COLOR_OUTPUT }} \
-            -e LOG_QUOTE_STR=${{ secrets.LOG_QUOTE_STR }} \
-            -e LOG_END_WITH_MESSAGE=${{ secrets.LOG_END_WITH_MESSAGE }} \
-            -e DB_DRIVER=${{ secrets.DB_DRIVER }} \
-            -e DB_PROTOCOL=${{ secrets.DB_PROTOCOL }} \
-            -e DB_NAME=${{ secrets.DB_NAME }} \
-            -e DB_HOST=${{ secrets.DB_HOST }} \
-            -e DB_PORT=${{ secrets.DB_PORT }} \
-            -e DB_USER=${{ secrets.DB_USER }} \
-            -e DB_PASS=${{ secrets.DB_PASSWORD }} \
-            -e DB_MAX_CON=${{ secrets.DB_MAX_CON }} \
-            -e DB_MIN_CON=${{ secrets.DB_MIN_CON }} \
-            -e DB_MAX_TIME=${{ secrets.DB_MAX_TIME }} \
-            -e DB_MIN_TIME=${{ secrets.DB_MIN_TIME }} \
-            -e TOKEN_NAME=${{ secrets.TOKEN_NAME }} \
-            -e SECRET_KEY_ACCESS_TOKEN=${{ secrets.SECRET_KEY_ACCESS_TOKEN }} \
-            -e SECRET_KEY_REFRESH_TOKEN=${{ secrets.SECRET_KEY_REFRESH_TOKEN }} \
-            -e SECRET_KEY_FP_TOKEN=${{ secrets.SECRET_KEY_FP_TOKEN }} \
-            -e SECRET_KEY_CSRF=${{ secrets.SECRET_KEY_CSRF }} \
-            -e SECRET_TEST_CLIENT=${{ secrets.SECRET_TEST_CLIENT }} \
-            -e CACHE_TIMEOUT=${{ secrets.CACHE_TIMEOUT }} \
-            -e DB_TIMEOUT=${{ secrets.DB_TIMEOUT }} \
-            -e DOWN_STREAM_TIMEOUT=${{ secrets.DOWN_STREAM_TIMEOUT }} \
-            -e CORS_ALLOW_METHODS=${{ secrets.CORS_ALLOW_METHODS }} \
-            -e CORS_ALLOW_HEADERS=${{ secrets.CORS_ALLOW_HEADERS }} \
-            -e CORS_EXPOSE_HEADERS=${{ secrets.CORS_EXPOSE_HEADERS }} \
-            -e CORS_ALLOW_ORIGINS=${{ secrets.CORS_ALLOW_ORIGINS }} \
-            -e CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }} \
-            ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}}
+        run: make db_up DB_URL="postgresql://${{secrets.POSTGRES_USER}}:${{secrets.POSTGRES_PASSWORD}}@localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}?sslmode=disable"
+
+      - name: Running Service Auth API
+        run: docker compose -f smoke.docker-compose.yml up auth_api -d
       - name: Verify Container
         run: |
           sleep 10  # Give the application time to start  
@@ -183,13 +187,8 @@ jobs:
         run: docker logs ${{ secrets.CONTAINER_NAME }}
       - name: Check Container Network
         run: docker inspect ${{ secrets.CONTAINER_NAME }} | grep -i ipaddress
-      - uses: matt-ball/newman-action@master
-        with:
-          collection: tests/end2end/auth_api_test.postman_collection.json
-          environment: tests/end2end/auth_api_test.postman_environment.json
-          reporters: '["emojitrain"]'
-          delayRequest: 1000
-          envVar: '[{ "key": "baseUrl", "value": "${{secrets.BASE_URL}}" },{"key":"secretTestClient","value":"${{secrets.SECRET_TEST_CLIENT}}"},{"key":"randomKSUID","value":"${{secrets.RANDOM_KSUID}}"}]'
+      - name: Smoke Test Auth API
+        run: docker compose -f smoke.docker-compose.yml up --exit-code-from smoketest
 
   release:
     name: "Push to Registry"
