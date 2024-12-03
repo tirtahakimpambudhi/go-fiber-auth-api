@@ -34,15 +34,6 @@ func NewConfig() (*RedisConfig, error) {
 // NewClient creates a new Redis client using the configuration.
 func (redisConfig *RedisConfig) NewClient() *redis.Client {
 	addr := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
-	if redisConfig.User == "" || redisConfig.Password == "" {
-		return redis.NewClient(&redis.Options{
-			Addr:            addr,
-			MinIdleConns:    redisConfig.MinCon,                               // Minimum number of idle connections.
-			MaxIdleConns:    redisConfig.MaxCon,                               // Maximum number of idle connections.
-			ConnMaxIdleTime: time.Duration(redisConfig.MinTime) * time.Minute, // Maximum idle connection time.
-			ConnMaxLifetime: time.Duration(redisConfig.MaxTime) * time.Minute, // Maximum connection lifetime.
-		})
-	}
 	return redis.NewClient(&redis.Options{
 		Addr:            addr,                                             // Redis server address.
 		Username:        redisConfig.User,                                 // Redis username.
