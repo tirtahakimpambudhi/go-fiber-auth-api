@@ -19,19 +19,15 @@ func Limiter() (fiber.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Create Redis storage
-	if config.User == "" || config.Password == "" {
-		storage = redis.New()
-	} else {
-		storage = redis.New(redis.Config{
-			Host:     config.Host,
-			Port:     config.Port,
-			Username: config.User,
-			Password: config.Password,
-			Database: config.Name,
-			Reset:    false,
-		})
-	}
+
+	storage = redis.New(redis.Config{
+		Host:     config.Host,
+		Port:     config.Port,
+		Username: config.User,
+		Password: config.Password,
+		Database: config.Name,
+		Reset:    false,
+	})
 
 	// Set up limiter middleware
 	return limiter.New(limiter.Config{
