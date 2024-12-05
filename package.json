@@ -2,6 +2,7 @@
   "name": "openapi",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "redocly bundle openapi/openapi.yaml --output docs/v1/swagger.json",
     "html": "redocly build-docs dist/openapi.json --output docs/v1/index.html"
