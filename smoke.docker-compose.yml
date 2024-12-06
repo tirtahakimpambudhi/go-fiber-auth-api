@@ -1,0 +1,63 @@
+
+services:
+  auth_api:
+    depends_on:
+      - postgresql_db
+      - redis_db
+    networks:
+      - network_postgres_db
+      - network_redis_db
+      - network_auth_api
+    container_name: "auth_api"
+    build:
+      context: ./
+      args:
+        username: "auth_api_user"
+        unique_id: 241231
+    env_file:
+      - ./.env.dev.auth_api
+
+  smoketest:
+    networks:
+      - network_auth_api
+    depends_on:
+      - auth_api
+    container_name: "smoketest"
+    build:
+      context: ./
+      dockerfile: Dockerfile.smoketest
+      args:
+        username: "auth_api_user"
+        unique_id: 241231
+    env_file:
+      - ./.env.dev.smoketest
+
+  postgresql_db:
+    container_name: "postgresql_db"
+    image: postgres:13-alpine
+    restart: always
+    env_file:
+      - ./.env.dev.postgres
+    networks:
+      - network_postgres_db
+    ports:
+      - "5432:5432"
+
+  redis_db:
+    container_name: redis_db
+    image: redis:latest
+    restart: always
+    networks:
+      - network_redis_db
+    ports:
+      - "6379:6379"
+    env_file:
+      - ./.env.dev.redis
+
+networks:
+  network_postgres_db:
+    name: network_postgres_db
+  network_redis_db:
+    name: network_redis_db
+  network_auth_api:
+    name: network_auth_api
