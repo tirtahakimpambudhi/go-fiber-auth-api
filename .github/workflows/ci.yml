@@ -53,29 +53,6 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - build
-    services:
-      postgres:
-        image: postgres
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_DB: ${{ secrets.DB_NAME }}
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -175,18 +152,18 @@ jobs:
           which migrate
 
       - name: Migrate Database
-        run: make db_up DB_URL="postgresql://${{secrets.POSTGRES_USER}}:${{secrets.POSTGRES_PASSWORD}}@localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}?sslmode=disable"
+        run: make db_up DB_URL="${{secrets.POSTGRES_PROTOCOL}}://${{secrets.POSTGRES_USER}}:${{secrets.POSTGRES_PASSWORD}}@localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}?sslmode=disable"
 
       - name: Running Service Auth API
         run: docker compose -f smoke.docker-compose.yml up auth_api -d
       - name: Verify Container
         run: |
           sleep 10  # Give the application time to start  
-          docker container ls -a | grep ${{secrets.CONTAINER_NAME}}
+          docker container ls -a | grep auth_api
       - name: Check Container Logs
-        run: docker logs ${{ secrets.CONTAINER_NAME }}
+        run: docker logs auth_api
       - name: Check Container Network
-        run: docker inspect ${{ secrets.CONTAINER_NAME }} | grep -i ipaddress
+        run: docker inspect auth_api | grep -i ipaddress
       - name: Smoke Test Auth API
         run: docker compose -f smoke.docker-compose.yml up --exit-code-from smoketest
 
