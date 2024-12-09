@@ -142,28 +142,6 @@ jobs:
           echo "POSTGRES_USER=${{secrets.POSTGRES_USER}}" >> .env.dev.postgres
           echo "POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env.dev.postgres
 
-      - name: Running Docker Compose ( Database Service )
-        run: docker compose -f smoke.docker-compose.yml up postgresql_db redis_db -d
-
-      - name: Install golang-migrate
-        run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
-          sudo mv migrate /usr/bin/
-          which migrate
-
-      - name: Migrate Database
-        run: make db_up DB_URL="${{secrets.POSTGRES_PROTOCOL}}://${{secrets.POSTGRES_USER}}:${{secrets.POSTGRES_PASSWORD}}@localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}?sslmode=disable"
-
-      - name: Running Service Auth API
-        run: docker compose -f smoke.docker-compose.yml up auth_api -d
-      - name: Verify Container
-        run: |
-          sleep 10  # Give the application time to start  
-          docker container ls -a | grep auth_api
-      - name: Check Container Logs
-        run: docker logs auth_api
-      - name: Check Container Network
-        run: docker inspect auth_api | grep -i ipaddress
       - name: Smoke Test Auth API
         run: docker compose -f smoke.docker-compose.yml up --exit-code-from smoketest
 
