@@ -1,14 +1,7 @@
 on:
-#  pull_request:
-#    branches:
-#      - master
-#      - test
-#      - dev
-  push: #  ONLY DEBUG
+  pull_request:
     branches:
       - master
-      - test
-      - dev
 
 jobs:
   build:
