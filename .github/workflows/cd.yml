@@ -3,9 +3,18 @@ on:
     branches:
       - master
 
+env:
+  WORKFLOWS_VARIABLE: "value workflows variable"
+
 jobs:
   deploy:
     runs-on: ubuntu-22.04
+    env:
+      JOBS_VARIABLE: "value jobs variable"
     steps:
       - name: "TODO Actual Deploy"
         run: echo "DUMMY"
+      - name: "Print Workflows Variable"
+        run: echo $WORKFLOWS_VARIABLE
+      - name: "Print Jobs Variable"
+        run: echo $JOBS_VARIABLE
