@@ -3,22 +3,13 @@ on:
     branches:
       - master
 
-env:
-  WORKFLOWS_VARIABLE: "value workflows variable"
-
 jobs:
-  deploy:
-    runs-on: ubuntu-22.04
+  deploy-job:
+    runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
     env:
-      JOBS_VARIABLE: "value jobs variable"
+      SVC_ID: ${{ github.event.repository.name }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
-      - name: "TODO Actual Deploy"
-        run: echo "DUMMY"
-      - name: "Print Workflows Variable"
-        run: echo $WORKFLOWS_VARIABLE
-      - name: "Print Jobs Variable"
-        run: echo $JOBS_VARIABLE
-      - name: "Print Steps Variable"
-        run: echo $STEPS_VARIABLE
-        env:
-          STEPS_VARIABLE: "value steps variable"
+      - uses: actions/checkout@v4.2.2
+      - run: railway status
