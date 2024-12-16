@@ -12,4 +12,20 @@ jobs:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4.2.2
-      - run: railway status
+        name: Checkout Repository
+
+      - name: Install Golang Migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/
+          which migrate
+
+      - name: Running Migrate DB
+        run: make db_up DB_URL="${{secrets.PROD_POSTGRES_URL}}"
+
+      - name: Deploy to Railway
+      - run: |
+           echo $SVC_ID
+#          railway add --service $SVC_ID \
+#          --image ${{ secrets.DOCKERHUB_USERNAME }}/${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
+#          --variables "MY_SPECIAL_ENV_VAR=1"
