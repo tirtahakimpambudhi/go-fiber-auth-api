@@ -24,7 +24,7 @@ jobs:
         run: make db_up DB_URL="${{secrets.PROD_POSTGRES_URL}}"
 
       - name: Deploy to Railway
-      - run: |
+        run: |
            echo $SVC_ID
 #          railway add --service $SVC_ID \
 #          --image ${{ secrets.DOCKERHUB_USERNAME }}/${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
