@@ -4,12 +4,8 @@ on:
       - master
 
 jobs:
-  deploy-job:
+  migrate-db:
     runs-on: ubuntu-latest
-    container: ghcr.io/railwayapp/cli:latest
-    env:
-      SVC_ID: ${{ github.event.repository.name }}
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4.2.2
         name: Checkout Repository
@@ -22,6 +18,16 @@ jobs:
 
       - name: Running Migrate DB
         run: make db_up DB_URL="${{secrets.PROD_POSTGRES_URL}}"
+
+  deploy-job:
+    runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      SVC_ID: ${{ github.event.repository.name }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        name: Checkout Repository
 
       - name: Deploy to Railway
         run: |
