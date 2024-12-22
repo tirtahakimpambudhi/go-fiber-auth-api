@@ -33,8 +33,8 @@ jobs:
 
       - name: Deploy to Railway
         run: |
-          railway up -s $SVC_ID \
-            -i ${{ secrets.DOCKERHUB_USERNAME }}/${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
+          railway add -s $SVC_ID -i ${{ secrets.DOCKERHUB_USERNAME }}/${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}}  
+          && railway up -s $SVC_ID \
             -e PORT=${{ secrets.PORT }} \
             -e CACHE_DB_NAME=${{ secrets.REDIS_NAME }} \
             -e CACHE_DB_HOST=${{ secrets.PROD_REDIS_HOST }} \
