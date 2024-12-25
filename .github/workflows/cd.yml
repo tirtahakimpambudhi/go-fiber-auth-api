@@ -31,11 +31,14 @@ jobs:
       - uses: actions/checkout@v4.2.2
         name: Checkout Repository
 
-      - name: Login Railway
-        run: railway login --browserless
-
-      - name: Link to Project
-        run: railway link -p ${{ secrets.RAILWAY_PROJECT_ID }} -e ${{ secrets.RAILWAY_ENVIRONMENT }}
+      - name: Add Services
+        run: railway add -s $SVC_ID
+#
+#      - name: Login Railway
+#        run: railway login --browserless
+#
+#      - name: Link to Project
+#        run: railway link -p ${{ secrets.RAILWAY_PROJECT_ID }} -e ${{ secrets.RAILWAY_ENVIRONMENT }}
 
 #      - name: Add Service Auth API to Railway
 #        run: |
