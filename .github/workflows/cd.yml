@@ -1,3 +1,5 @@
+name: Deploy to Railway
+
 on:
   push:
     branches:
@@ -25,7 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SVC_ID: ${{ github.event.repository.name }}
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4.2.2
         name: Checkout Repository
@@ -35,6 +36,10 @@ jobs:
 
       - name: Install Railway Latest
         run: npm i -g @railway/cli@3.20.0
+
+      - name: Login Railway with Interactive Shell
+        run: |
+          script -q -e -c "railway login --browserless" /dev/null
 
       - name: Add Service Auth API to Railway
         run: |
@@ -101,5 +106,6 @@ jobs:
               -v CORS_ALLOW_ORIGINS=${{ secrets.PROD_CORS_ALLOW_ORIGINS }} \
               -v CORS_ALLOW_CREDENTIALS=${{ secrets.CORS_ALLOW_CREDENTIALS }}
           fi
+
       - name: Running Service Auth API
         run: railway up -s $SVC_ID -e ${{ secrets.RAILWAY_ENVIRONMENT }} -d
