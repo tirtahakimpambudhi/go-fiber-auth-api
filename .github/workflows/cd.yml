@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SVC_ID: ${{ github.event.repository.name }}
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4.2.2
         name: Checkout Repository
