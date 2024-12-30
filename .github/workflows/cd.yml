@@ -39,4 +39,4 @@ jobs:
         run: npm i -g @railway/cli@3.20.0
 
       - name: Running Service Auth API
-        run: railway up -s $SVC_ID -e ${{ secrets.RAILWAY_ENVIRONMENT }} -c -d
+        run: railway up -s $SVC_ID -e ${{ secrets.RAILWAY_ENVIRONMENT }} -d
