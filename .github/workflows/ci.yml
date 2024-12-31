@@ -122,7 +122,6 @@ jobs:
           docker run -d \
             --network host  \
             --name ${{ secrets.CONTAINER_NAME }} \
-            -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
             -e PORT=${{ secrets.PORT }} \
             -e CACHE_DB_HOST=${{ secrets.CACHE_DB_HOST }} \
             -e CACHE_DB_PORT=${{ secrets.CACHE_DB_PORT }} \
