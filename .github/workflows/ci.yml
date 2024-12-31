@@ -70,7 +70,7 @@ jobs:
       redis:
         image: redis
         ports:
-          - 6739:6739
+          - 6739/tcp
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
