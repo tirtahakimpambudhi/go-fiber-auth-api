@@ -97,7 +97,18 @@ jobs:
           docker buildx build --load -t ${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
           --build-arg username=${{secrets.APP_USER}} \
           --build-arg unique_id=${{secrets.APP_ID}} .
-
+          
+      - name: Verify Redis Connection ( DEBUG )
+        run: |
+          sudo apt-get update && sudo apt-get install -y redis-tools
+          redis-cli -h localhost -p 6379 ping
+          if [ $? -eq 0 ]; then
+            echo "Redis connection successful"
+          else
+            echo "Redis connection failed"
+            exit 1
+          fi
+          
       - name: Install golang-migrate
         run: |
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
