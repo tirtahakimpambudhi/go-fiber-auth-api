@@ -22,11 +22,7 @@ func Limiter() (fiber.Handler, error) {
 	}
 	// Create Redis storage
 	if config.User == "" || config.Password == "" {
-		storage = redis.New(redis.Config{
-			Host: config.Host,
-			Port: config.Port,
-			URL:  fmt.Sprintf("redis://%s:%d", config.Host, config.Port),
-		})
+		storage = redis.New()
 	} else {
 		storage = redis.New(redis.Config{
 			Host:     config.Host,
