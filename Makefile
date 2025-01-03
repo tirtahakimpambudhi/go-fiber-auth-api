@@ -11,7 +11,7 @@ build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/$(APP_NAME) main.go
 
 run:
-       @go run main.go
+        @go run main.go
 
 lint:
 	@golangci-lint run ./...
