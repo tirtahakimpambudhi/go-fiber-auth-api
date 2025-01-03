@@ -161,6 +161,6 @@ jobs:
 
       - name: Build Image and Push to Docker Registry
         run: |
-          docker buildx build --push -t ${{ secrets.DOCKERHUB_USERNAME }}/${{secrets.IMAGE_NAME}}:${{secrets.IMAGE_TAG}} \
+          docker buildx build --push -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{secrets.IMAGE_TAG}} \
           --build-arg username=${{secrets.APP_USER}} \
           --build-arg unique_id=${{secrets.APP_ID}} .
