@@ -1,7 +1,7 @@
 FROM golang:1.22.10-alpine AS builder
 
-ARG username
-ARG unique_id
+ARG username="appuser"
+ARG unique_id=3125
 
 WORKDIR /app
 
