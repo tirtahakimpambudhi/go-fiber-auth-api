@@ -1,4 +1,4 @@
-.PHONY: env db_up db_down db_version lint tests pkg_scan build tests_nocov
+.PHONY: env db_up db_down db_version lint tests pkg_scan build tests_nocov run
 
 DB_URL="postgresql://user:password@host:port/database?sslmode=disable"
 APP_NAME="main"
@@ -9,6 +9,9 @@ env:
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o build/$(APP_NAME) main.go
+
+run:
+	@go run main.go
 
 lint:
 	@golangci-lint run ./...
