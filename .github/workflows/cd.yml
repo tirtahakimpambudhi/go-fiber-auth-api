@@ -25,6 +25,7 @@ jobs:
     needs:
       - migrate-db
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
       SVC_ID: ${{ github.event.repository.name }}
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
